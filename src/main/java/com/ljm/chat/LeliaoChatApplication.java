@@ -1,6 +1,5 @@
 package com.ljm.chat;
 
-import com.ljm.chat.utils.MyMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import tk.mybatis.spring.annotation.MapperScan;
@@ -11,7 +10,8 @@ import tk.mybatis.spring.annotation.MapperScan;
  * @Date 2019.07.13-16.06
  * @Version V1.0
  */
-@SpringBootApplication()
+@SpringBootApplication(scanBasePackages = {"org.n3r.idworker"},
+        scanBasePackageClasses = {NettyBooter.class})
 @MapperScan(basePackages = {"com.ljm.chat.mapper"})
 public class LeliaoChatApplication {
 

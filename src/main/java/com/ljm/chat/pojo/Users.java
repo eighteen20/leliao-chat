@@ -14,7 +14,7 @@ public class Users implements Serializable {
     private String id;
 
     /**
-    * 用户名，账号，慕信号
+    * 用户名，账号
     */
     private String username;
 
