@@ -12,5 +12,6 @@ import lombok.Data;
 public class UserBO {
     private String id;
     private String faceData;
+    private String nickName;
 
 }

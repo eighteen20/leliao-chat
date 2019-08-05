@@ -100,6 +100,17 @@ public class UserController {
         return usersToUserVO(userResult);
     }
 
+    @PostMapping("/setNickname")
+    public JsonResult setNickname(@RequestBody UserBO userBO) {
+        // 更新用户信息
+        Users user = new Users();
+        user.setId(userBO.getId());
+        user.setNickname(userBO.getNickName());
+        Users userResult = this.userService.updateUserInfo(user);
+
+        return usersToUserVO(userResult);
+    }
+
     /**
      * 把Users实体转换为UserVo对象
      *

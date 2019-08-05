@@ -3,6 +3,8 @@ package com.ljm.chat.serivce;
 import com.ljm.chat.pojo.Users;
 import com.ljm.chat.pojo.vo.UserVO;
 
+import java.io.IOException;
+
 /**
  * @Description 用户接口
  * @Author Liujinmai
