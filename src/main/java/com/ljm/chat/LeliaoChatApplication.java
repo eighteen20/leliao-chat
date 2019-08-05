@@ -11,7 +11,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  * @Version V1.0
  */
 @SpringBootApplication(scanBasePackages = {"org.n3r.idworker"},
-        scanBasePackageClasses = {NettyBooter.class})
+        scanBasePackageClasses = {NettyBooter.class, FastdfsImporter.class})
 @MapperScan(basePackages = {"com.ljm.chat.mapper"})
 public class LeliaoChatApplication {
 

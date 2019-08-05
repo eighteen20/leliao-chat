@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-public class JsonResultUtils {
+public class JsonResult {
     /**
      * 响应业务状态
      */
@@ -40,41 +40,41 @@ public class JsonResultUtils {
      */
     private String ok;
 
-    public static JsonResultUtils build(Integer status, String msg, Object data) {
-        return new JsonResultUtils(status, msg, data);
+    public static JsonResult build(Integer status, String msg, Object data) {
+        return new JsonResult(status, msg, data);
     }
 
-    public static JsonResultUtils ok(Object data) {
-        return new JsonResultUtils(data);
+    public static JsonResult ok(Object data) {
+        return new JsonResult(data);
     }
 
-    public static JsonResultUtils ok() {
-        return new JsonResultUtils(null);
+    public static JsonResult ok() {
+        return new JsonResult(null);
     }
 
-    public static JsonResultUtils errorMsg(String msg) {
-        return new JsonResultUtils(500, msg, null);
+    public static JsonResult errorMsg(String msg) {
+        return new JsonResult(500, msg, null);
     }
 
-    public static JsonResultUtils errorMap(Object data) {
-        return new JsonResultUtils(501, "error", data);
+    public static JsonResult errorMap(Object data) {
+        return new JsonResult(501, "error", data);
     }
 
-    public static JsonResultUtils errorTokenMsg(String msg) {
-        return new JsonResultUtils(502, msg, null);
+    public static JsonResult errorTokenMsg(String msg) {
+        return new JsonResult(502, msg, null);
     }
 
-    public static JsonResultUtils errorException(String msg) {
-        return new JsonResultUtils(555, msg, null);
+    public static JsonResult errorException(String msg) {
+        return new JsonResult(555, msg, null);
     }
 
-    private JsonResultUtils(Object data) {
+    private JsonResult(Object data) {
         this.status = 200;
         this.msg = "OK";
         this.data = data;
     }
 
-    private JsonResultUtils(Integer status, String msg, Object data) {
+    private JsonResult(Integer status, String msg, Object data) {
         this.status = status;
         this.msg = msg;
         this.data = data;

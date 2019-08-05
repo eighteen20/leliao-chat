@@ -1,6 +1,7 @@
 package com.ljm.chat.serivce;
 
 import com.ljm.chat.pojo.Users;
+import com.ljm.chat.pojo.vo.UserVO;
 
 /**
  * @Description 用户接口
@@ -33,4 +34,12 @@ public interface UserService {
      * @return 注册好的用户对象
      */
     Users saveUser(Users user);
+
+    /**
+     * 修改用户信息
+     *
+     * @param user 用户对象
+     * @return Users
+     */
+    Users updateUserInfo(Users user);
 }

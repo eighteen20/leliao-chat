@@ -29,6 +29,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public Users updateUserInfo(Users user) {
+        final int i = this.usersMapper.updateByPrimaryKeySelective(user);
+        return queryUserById(user);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+    Users queryUserById(Users user) {
+        return this.usersMapper.selectByPrimaryKey(user);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Users saveUser(Users user) {
         final String userId = sid.nextShort();
         user.setNickname(user.getUsername());

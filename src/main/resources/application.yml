@@ -41,3 +41,15 @@ spring:
 #  建议设置比数据库超时时长少60秒，参考MySQL wait_timeout参数（show variables like '%timeout%';） -->
       max-lifetime: 28740000
       connection-test-query: SELECT 1
+
+# ===================================================================
+# 分布式文件系统FDFS配置
+# ===================================================================
+fdfs:
+  so-timeout: 1501
+  connect-timeout: 601
+  thumb-image:             #缩略图生成参数
+    width: 80
+    height: 80
+  tracker-list:            #TrackerList参数,支持多个
+    - 47.101.67.223:22122

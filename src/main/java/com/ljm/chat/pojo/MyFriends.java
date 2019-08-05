@@ -3,6 +3,10 @@ package com.ljm.chat.pojo;
 import java.io.Serializable;
 import lombok.Data;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * @Description 我的好友实体
  * @Author Liujinmai
@@ -10,17 +14,21 @@ import lombok.Data;
  * @Version V1.0
  */
 @Data
+@Table(name = "my_friends")
 public class MyFriends implements Serializable {
+    @Id
     private String id;
 
     /**
-    * 用户id
-    */
+     * 用户id
+     */
+    @Column(name = "my_user_id")
     private String myUserId;
 
     /**
-    * 用户的好友id
-    */
+     * 用户的好友id
+     */
+    @Column(name = "my_friend_user_id")
     private String myFriendUserId;
 
     private static final long serialVersionUID = 1L;
