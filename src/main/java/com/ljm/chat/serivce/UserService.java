@@ -1,9 +1,11 @@
 package com.ljm.chat.serivce;
 
 import com.ljm.chat.pojo.Users;
+import com.ljm.chat.pojo.vo.FriendRequestVO;
 import com.ljm.chat.pojo.vo.UserVO;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @Description 用户接口
@@ -44,4 +46,56 @@ public interface UserService {
      * @return Users
      */
     Users updateUserInfo(Users user);
+
+    /**
+     * 搜索好友的前置条件
+     *
+     * @param myUserId 我的账号
+     * @param friendUserName 好友账号
+     * @return SearchFriendsStatusEnum列举的前置状态
+     */
+    Integer preconditionSearchFriends(String myUserId, String friendUserName);
+
+    /**
+     * 根据用户名查找用户
+     *
+     * @param userName 用户名
+     * @return 用户
+     */
+    Users queryUserByUserName(String userName);
+
+    /**
+     * 发送添加好友的请求
+     *
+     * @param myUserId 我的Id
+     * @param friendUserName 好友账号
+     */
+    void sendFriendRequest(String myUserId, String friendUserName);
+
+    /**
+     *根据好友请求表的接受者查询请求者的信息
+     *
+     * @param acceptUserId 接收者Id
+     * @return List
+     */
+    List<FriendRequestVO> queryFriendRequestList(String acceptUserId);
+
+    /**
+     * 删除好友请求记录
+     *
+     * @param sendUserId 请求方
+     * @param acceptUserId 被请求方
+     */
+    void deleteFriendRequest(String sendUserId, String acceptUserId);
+
+    /**
+     * 同意好友请求
+     *         1. 保存好友
+     *         2. 逆向保存好友
+     *         3. 删除请求记录
+     *
+     * @param sendUserId 请求方
+     * @param acceptUserId 被请求方
+     */
+    void passFriendRequest(String sendUserId, String acceptUserId);
 }
