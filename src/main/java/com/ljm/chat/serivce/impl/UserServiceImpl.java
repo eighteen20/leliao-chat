@@ -9,6 +9,7 @@ import com.ljm.chat.pojo.FriendsRequest;
 import com.ljm.chat.pojo.MyFriends;
 import com.ljm.chat.pojo.Users;
 import com.ljm.chat.pojo.vo.FriendRequestVO;
+import com.ljm.chat.pojo.vo.MyFriendsVO;
 import com.ljm.chat.serivce.UserService;
 import com.ljm.chat.utils.FastdfsClient;
 import com.ljm.chat.utils.FileUtils;
@@ -162,6 +163,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+    public List<MyFriendsVO> queryMyFriends(String userId) {
+        return this.usersMapperCustom.queryMyFriends(userId);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
     public Integer preconditionSearchFriends(String myUserId, String friendUserName) {
         Users user = queryUserByUserName(friendUserName);
         if (null == user) {
@@ -172,7 +179,7 @@ public class UserServiceImpl implements UserService {
             // 不能添加自己
             return SearchFriendsStatusEnum.NOT_YOURSELF.status;
         }
-        MyFriends friends = getFriendsByMyIdAndFriend(myUserId, friendUserName);
+        MyFriends friends = getFriendsByMyIdAndFriend(myUserId, user.getId());
         if (friends != null) {
             // 用户已存在
             return SearchFriendsStatusEnum.ALREADY_FRIENDS.status;
@@ -181,11 +188,11 @@ public class UserServiceImpl implements UserService {
         return SearchFriendsStatusEnum.SUCCESS.status;
     }
 
-    private MyFriends getFriendsByMyIdAndFriend(String myUserId, String friendUserName) {
+    private MyFriends getFriendsByMyIdAndFriend(String myUserId, String friendUserId) {
         Example example = new Example(MyFriends.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("myUserId", myUserId);
-        criteria.andEqualTo("myFriendUserId", friendUserName);
+        criteria.andEqualTo("myFriendUserId", friendUserId);
         return this.myFriendsMapper.selectOneByExample(example);
     }
 

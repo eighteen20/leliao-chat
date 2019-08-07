@@ -19,5 +19,22 @@
         where
             fr.accept_user_id = #{acceptUserId}
     </select>
+    <select id="queryMyFriends" resultType="com.ljm.chat.pojo.vo.MyFriendsVO"
+            parameterType="string">
+        select
+            u.id as friendUserId,
+            u.username as friendUsername,
+            u.face_image as friendFaceImage,
+            u.face_image_big as friendFaceImageBig,
+            u.nickname as friendNickname
+        from
+                my_friends mf
+            left join
+                users u
+            on
+                mf.my_friend_user_id = u.id
+        where
+            mf.my_user_id = #{userId}
+    </select>
 
 </mapper>

@@ -4,6 +4,7 @@ import com.ljm.chat.enums.OperatorFriendRequestTypeEnum;
 import com.ljm.chat.enums.SearchFriendsStatusEnum;
 import com.ljm.chat.pojo.Users;
 import com.ljm.chat.pojo.bo.UserBO;
+import com.ljm.chat.pojo.vo.MyFriendsVO;
 import com.ljm.chat.pojo.vo.UserVO;
 import com.ljm.chat.serivce.UserService;
 import com.ljm.chat.utils.FastdfsClient;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @Description 用户操作
@@ -213,7 +215,28 @@ public class UserController {
             this.userService.passFriendRequest(sendUserId, acceptUserId);
         }
 
-        return JsonResult.ok();
+        // 查询好友列表
+        List<MyFriendsVO> myFriendList  = this.userService.queryMyFriends(acceptUserId);
+
+        return JsonResult.ok(myFriendList);
+    }
+
+    /**
+     * 查询我的好友列表
+     *
+     * @param userId 登陆者Id
+     * @return
+     */
+    @PostMapping("/myFriends")
+    public JsonResult myFriends(String userId) {
+        // 判空
+        if (StringUtils.isBlank(userId)) {
+            return JsonResult.errorMsg("服务器异常，重新登陆尝试");
+        }
+
+        List<MyFriendsVO> myFriendList  = this.userService.queryMyFriends(userId);
+
+        return JsonResult.ok(myFriendList);
     }
 
     /**

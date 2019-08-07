@@ -2,6 +2,7 @@ package com.ljm.chat.mapper;
 
 import com.ljm.chat.pojo.Users;
 import com.ljm.chat.pojo.vo.FriendRequestVO;
+import com.ljm.chat.pojo.vo.MyFriendsVO;
 import com.ljm.chat.utils.MyMapper;
 
 import java.util.List;
@@ -20,4 +21,12 @@ public interface UsersMapperCustom extends MyMapper<Users> {
      * @return List
      */
     List<FriendRequestVO> queryFriendRequestList(String acceptUserId);
+
+    /**
+     * 查询我的好友
+     *
+     * @param userId 登陆者Id
+     * @return List<MyFriendsVO>
+     */
+    List<MyFriendsVO> queryMyFriends(String userId);
 }

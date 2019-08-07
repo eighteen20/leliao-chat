@@ -2,6 +2,7 @@ package com.ljm.chat.serivce;
 
 import com.ljm.chat.pojo.Users;
 import com.ljm.chat.pojo.vo.FriendRequestVO;
+import com.ljm.chat.pojo.vo.MyFriendsVO;
 import com.ljm.chat.pojo.vo.UserVO;
 
 import java.io.IOException;
@@ -98,4 +99,12 @@ public interface UserService {
      * @param acceptUserId 被请求方
      */
     void passFriendRequest(String sendUserId, String acceptUserId);
+
+    /**
+     * 查询好友列表
+     *
+     * @param userId
+     * @return
+     */
+    List<MyFriendsVO> queryMyFriends(String userId);
 }
