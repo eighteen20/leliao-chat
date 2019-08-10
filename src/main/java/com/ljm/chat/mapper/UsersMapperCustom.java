@@ -29,4 +29,6 @@ public interface UsersMapperCustom extends MyMapper<Users> {
      * @return List<MyFriendsVO>
      */
     List<MyFriendsVO> queryMyFriends(String userId);
+
+    void batchUpdateMsgSigned(List<String> msgIdList);
 }

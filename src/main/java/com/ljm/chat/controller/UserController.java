@@ -2,6 +2,7 @@ package com.ljm.chat.controller;
 
 import com.ljm.chat.enums.OperatorFriendRequestTypeEnum;
 import com.ljm.chat.enums.SearchFriendsStatusEnum;
+import com.ljm.chat.pojo.ChatMsg;
 import com.ljm.chat.pojo.Users;
 import com.ljm.chat.pojo.bo.UserBO;
 import com.ljm.chat.pojo.vo.MyFriendsVO;
@@ -237,6 +238,24 @@ public class UserController {
         List<MyFriendsVO> myFriendList  = this.userService.queryMyFriends(userId);
 
         return JsonResult.ok(myFriendList);
+    }
+
+    /**
+     * 用户手机端获取未签收的消息列表
+     *
+     * @param acceptUserId 接受者Id
+     * @return
+     */
+    @PostMapping("/getUnReadMsgList")
+    public JsonResult getUnReadMsgList(String acceptUserId) {
+        // 判空
+        if (StringUtils.isBlank(acceptUserId)) {
+            return JsonResult.errorMsg("");
+        }
+
+        List<ChatMsg> unReadMsgList  = this.userService.getUnReadMsgList(acceptUserId);
+
+        return JsonResult.ok(unReadMsgList);
     }
 
     /**

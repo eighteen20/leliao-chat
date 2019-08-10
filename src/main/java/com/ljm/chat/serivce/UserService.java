@@ -1,5 +1,6 @@
 package com.ljm.chat.serivce;
 
+import com.ljm.chat.netty.content.ChatMsg;
 import com.ljm.chat.pojo.Users;
 import com.ljm.chat.pojo.vo.FriendRequestVO;
 import com.ljm.chat.pojo.vo.MyFriendsVO;
@@ -107,4 +108,27 @@ public interface UserService {
      * @return
      */
     List<MyFriendsVO> queryMyFriends(String userId);
+
+    /**
+     * 保存聊天消息到数据库
+     *
+     * @param chatMsg 自定义聊天信息模型，不是pojo
+     * @return
+     */
+    String saveMsg(ChatMsg chatMsg);
+
+    /**
+     * 批量签收消息
+     *
+     * @param msgIdList
+     */
+    void updateMsgSigned(List<String> msgIdList);
+
+    /**
+     * 用户手机端获取未签收的消息列表
+     *
+     * @param acceptUserId 接受者Id
+     * @return
+     */
+    List<com.ljm.chat.pojo.ChatMsg> getUnReadMsgList(String acceptUserId);
 }

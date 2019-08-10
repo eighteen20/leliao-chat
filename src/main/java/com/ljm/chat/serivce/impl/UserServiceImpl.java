@@ -1,10 +1,16 @@
 package com.ljm.chat.serivce.impl;
 
+import com.ljm.chat.enums.MsgActionEnum;
+import com.ljm.chat.enums.MsgSignFlagEnum;
 import com.ljm.chat.enums.SearchFriendsStatusEnum;
+import com.ljm.chat.mapper.ChatMsgMapper;
 import com.ljm.chat.mapper.FriendsRequestMapper;
 import com.ljm.chat.mapper.MyFriendsMapper;
 import com.ljm.chat.mapper.UsersMapper;
 import com.ljm.chat.mapper.UsersMapperCustom;
+import com.ljm.chat.netty.UserChannelRel;
+import com.ljm.chat.netty.content.DataContent;
+import com.ljm.chat.pojo.ChatMsg;
 import com.ljm.chat.pojo.FriendsRequest;
 import com.ljm.chat.pojo.MyFriends;
 import com.ljm.chat.pojo.Users;
@@ -13,8 +19,11 @@ import com.ljm.chat.pojo.vo.MyFriendsVO;
 import com.ljm.chat.serivce.UserService;
 import com.ljm.chat.utils.FastdfsClient;
 import com.ljm.chat.utils.FileUtils;
+import com.ljm.chat.utils.JsonUtils;
 import com.ljm.chat.utils.Md5Utils;
 import com.ljm.chat.utils.QrCodeUtils;
+import io.netty.channel.Channel;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,13 +50,15 @@ public class UserServiceImpl implements UserService {
     private final MyFriendsMapper myFriendsMapper;
     private final FriendsRequestMapper friendsRequestMapper;
     private final UsersMapperCustom usersMapperCustom;
+    private final ChatMsgMapper chatMsgMapper;
     private final QrCodeUtils qrCodeUtils;
     private final FastdfsClient fastdfsClient;
+
     @Autowired
     public UserServiceImpl(UsersMapper usersMapper, Sid sid,
                            QrCodeUtils qrCodeUtils, FastdfsClient fastdfsClient,
                            MyFriendsMapper myFriendsMapper, FriendsRequestMapper friendsRequestMapper,
-                           UsersMapperCustom usersMapperCustom) {
+                           UsersMapperCustom usersMapperCustom, ChatMsgMapper chatMsgMapper) {
         this.usersMapper = usersMapper;
         this.myFriendsMapper = myFriendsMapper;
         this.friendsRequestMapper = friendsRequestMapper;
@@ -55,6 +66,18 @@ public class UserServiceImpl implements UserService {
         this.qrCodeUtils = qrCodeUtils;
         this.fastdfsClient = fastdfsClient;
         this.usersMapperCustom = usersMapperCustom;
+        this.chatMsgMapper = chatMsgMapper;
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+    public List<ChatMsg> getUnReadMsgList(String acceptUserId) {
+        Example example = new Example(ChatMsg.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("acceptUserId", acceptUserId);
+        criteria.andEqualTo("signFlag", MsgSignFlagEnum.unsign.type);
+
+        return this.chatMsgMapper.selectByExample(example);
     }
 
     @Override
@@ -66,12 +89,22 @@ public class UserServiceImpl implements UserService {
         saveFriend(acceptUserId, sendUserId);
         // 删除请求记录
         deleteFriendRequest(sendUserId, acceptUserId);
+
+        final Channel channel = UserChannelRel.get(sendUserId);
+        if (null != channel) {
+            // 使用webSocket主动推送到消息到请求发起者，更新她的联系人为最新
+            DataContent dataContent =
+                    new DataContent(MsgActionEnum.PULL_FRIEND.type, null, null);
+            channel.writeAndFlush(new TextWebSocketFrame(
+                    JsonUtils.objectToJson(dataContent)
+            ));
+        }
     }
 
     /**
      * 好友关系保存
      *
-     * @param sendUserId 请求方
+     * @param sendUserId   请求方
      * @param acceptUserId 被请求方
      */
     private void saveFriend(String sendUserId, String acceptUserId) {
@@ -162,6 +195,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public void updateMsgSigned(List<String> msgIdList) {
+        this.usersMapperCustom.batchUpdateMsgSigned(msgIdList);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public String saveMsg(com.ljm.chat.netty.content.ChatMsg chatMsg) {
+        String msgId = this.sid.nextShort();
+        ChatMsg msgDb = new ChatMsg(
+                msgId, chatMsg.getSenderId(),
+                chatMsg.getReceiverId(), chatMsg.getMsg(),
+                MsgSignFlagEnum.unsign.type, new Date()
+        );
+        this.chatMsgMapper.insert(msgDb);
+        return msgId;
+    }
+
+    @Override
     @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
     public List<MyFriendsVO> queryMyFriends(String userId) {
         return this.usersMapperCustom.queryMyFriends(userId);
@@ -198,7 +250,8 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 生成唯一二维码
-     *             内容格式： leliao_qrcode:[username]
+     * 内容格式： leliao_qrcode:[username]
+     *
      * @param user 用户对像
      * @return 上传后地址
      */

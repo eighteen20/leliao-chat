@@ -2,6 +2,7 @@ package com.ljm.chat;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import tk.mybatis.spring.annotation.MapperScan;
 
 /**
@@ -15,8 +16,13 @@ import tk.mybatis.spring.annotation.MapperScan;
 @MapperScan(basePackages = {"com.ljm.chat.mapper"})
 public class LeliaoChatApplication {
 
+
     public static void main(String[] args) {
         SpringApplication.run(LeliaoChatApplication.class, args);
     }
 
+    @Bean
+    public SpringUtil getSpringUtil() {
+        return new SpringUtil();
+    }
 }

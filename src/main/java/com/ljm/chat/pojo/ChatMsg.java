@@ -2,7 +2,10 @@ package com.ljm.chat.pojo;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -15,6 +18,8 @@ import javax.persistence.Table;
  * @Version V1.0
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "chat_msg")
 public class ChatMsg implements Serializable {
     @Id
@@ -38,7 +43,7 @@ public class ChatMsg implements Serializable {
     private Integer signFlag;
 
     /**
-     * 发送请求的事件
+     * 发送请求的时间
      */
     @Column(name = "create_time")
     private Date createTime;
