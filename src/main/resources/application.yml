@@ -19,9 +19,9 @@ pagehelper:
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/leliao-dev?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://47.101.67.223:3306/leliao-dev?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
     username: root
-    password: svse
+    password: LJMmysql1211.
 # Hikari will use the above plus the following to setup connection pooling
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
