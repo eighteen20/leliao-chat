@@ -16,7 +16,7 @@ sh $LY_DIR/bin/leliao.sh stop
 mvn package -Pprod
 
 # 进入打包好的Halo目录
-cd $LY_DIR/target/dist/halo
+cd $LY_DIR/target
 
 # 运行Halo
 nohup java -server -jar `find ./ -name "leliao*.jar"` > /dev/null 2>&1 &
